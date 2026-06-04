@@ -1,0 +1,9 @@
+#!/bin/sh
+#
+# commit-msg hook: validates that the commit message follows
+# the Conventional Commits specification using commitlint.
+#
+# Format: <type>(<scope>): <subject>
+# Example: feat(api): add file update endpoint
+
+npx --no -- commitlint --edit "$1"

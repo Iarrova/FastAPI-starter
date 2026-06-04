@@ -1,0 +1,67 @@
+services:
+  develop:
+    build:
+      context: ./..
+      dockerfile: ./build/Dockerfile
+      target: develop
+    container_name: ${SERVICE_NAME}-develop
+    ports:
+      - "8080:${SERVICE_PORT}"
+    environment:
+      SERVICE_HOST: ${SERVICE_HOST}
+      SERVICE_PORT: ${SERVICE_PORT}
+      SERVICE_NAME: ${SERVICE_NAME}
+
+      DATABASE_HOST: ${DATABASE_HOST}
+      DATABASE_PORT: ${DATABASE_PORT}
+      DATABASE_USER: ${DATABASE_USER}
+      DATABASE_PASSWORD: ${DATABASE_PASSWORD}
+      DATABASE_NAME: ${DATABASE_NAME}
+    volumes:
+      - ../app:/app/app
+    networks:
+      - development
+    depends_on:
+      database:
+        condition: service_healthy
+
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: ${SERVICE_NAME}-pgadmin
+    restart: unless-stopped
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_EMAIL}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_PASSWORD}
+    ports:
+      - "5050:80"
+    networks:
+      - development
+    depends_on:
+      database:
+        condition: service_healthy
+
+  database:
+    image: postgres:18-bookworm
+    container_name: ${SERVICE_NAME}-database
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${DATABASE_USER}
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
+      POSTGRES_DB: ${DATABASE_NAME}
+    ports:
+      - "15432:${DATABASE_PORT}"
+    volumes:
+      - postgres_data:/var/lib/postgresql
+    networks:
+      - development
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U ${DATABASE_USER} -d ${DATABASE_NAME}" ]
+      interval: 10s
+      timeout: 10s
+      retries: 5
+
+networks:
+  development:
+
+volumes:
+  postgres_data:

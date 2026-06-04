@@ -1,0 +1,16 @@
+[project]
+name = "fastapi-starter"
+version = "0.1.0"
+description = "Template backend to quickstart a FastAPI application."
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "bcrypt>=5.0.0",
+    "fastapi[standard]>=0.136.3",
+    "psycopg2-binary>=2.9.12",
+    "pydantic-settings>=2.14.1",
+    "sqlmodel>=0.0.38",
+]
+
+[tool.fastapi]
+entrypoint = "app.main:app"
