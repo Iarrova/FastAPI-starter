@@ -33,13 +33,10 @@ class UserService:
 
     def login(self, data: UserLogin):
         user: User | None = self.repository.get_by_email(data.email)
-        if not user:
-            raise NotFoundException("User", data.email)
+        if not user or not check_password(data.password, user.password):
+            raise UnauthorizedException("Wrong email or password")
 
-        if check_password(data.password, user.password):
-            return user
-
-        raise UnauthorizedException("Wrong email or password")
+        return user
 
 
 def hash_password(password: str) -> str:
