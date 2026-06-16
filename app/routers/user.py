@@ -11,21 +11,21 @@ router = APIRouter(prefix="/users")
 
 
 @router.post("/", response_model=UserPublic, status_code=status.HTTP_201_CREATED)
-async def register_user(
+def register_user(
     user_create: UserCreate, service: UserService = Depends(get_user_service)
 ):
     return service.register(user_create)
 
 
 @router.post("/login", response_model=UserPublic)
-async def login(
+def login(
     user_login: UserLogin, service: UserService = Depends(get_user_service)
 ):
     return service.login(user_login)
 
 
 @router.get("/{id}", response_model=UserPublic)
-async def get_user(
+def get_user(
     id: Annotated[UUID, Path(title="The ID of the user to get")],
     service: UserService = Depends(get_user_service),
 ):
