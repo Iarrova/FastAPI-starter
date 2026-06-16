@@ -1,7 +1,12 @@
 from uuid import UUID
 
-from app.exceptions.exceptions import ConflictException, NotFoundException
 import bcrypt
+
+from app.exceptions.exceptions import (
+    ConflictException,
+    NotFoundException,
+    UnauthorizedException,
+)
 from app.models.user import User
 from app.repositories.user import UserRepository
 from app.schemas.user import UserCreate, UserLogin
@@ -25,6 +30,17 @@ class UserService:
             raise NotFoundException("User", id)
 
         return user
+
+    def login(self, data: UserLogin):
+        user: User | None = self.repository.get_by_email(data.email)
+        if not user:
+            raise NotFoundException("User", data.email)
+
+        if check_password(data.password, user.password):
+            return user
+
+        raise UnauthorizedException("Wrong email or password")
+
 
 def hash_password(password: str) -> str:
     password_bytes = password.encode("utf-8")

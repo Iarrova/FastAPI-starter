@@ -9,6 +9,11 @@ class AppException(Exception):
         self.context = context or {}
 
 
+class UnauthorizedException(AppException):
+    def __init__(self, detail: str):
+        super().__init__(detail=detail)
+
+
 class NotFoundException(AppException):
     def __init__(self, resource: str, identifier: str | UUID):
         super().__init__(

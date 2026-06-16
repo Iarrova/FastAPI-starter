@@ -17,6 +17,13 @@ async def register_user(
     return service.register(user_create)
 
 
+@router.post("/login", response_model=UserPublic)
+async def login(
+    user_login: UserLogin, service: UserService = Depends(get_user_service)
+):
+    return service.login(user_login)
+
+
 @router.get("/{id}", response_model=UserPublic)
 async def get_user(
     id: Annotated[UUID, Path(title="The ID of the user to get")],
