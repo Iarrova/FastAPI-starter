@@ -1,7 +1,7 @@
 from typing import Annotated
 from uuid import UUID
 
-from fastapi import APIRouter, Depends, Path
+from fastapi import APIRouter, Depends, Path, status
 
 from app.dependencies import get_user_service
 from app.schemas.user import UserCreate, UserLogin, UserPublic
@@ -10,7 +10,7 @@ from app.services.user import UserService
 router = APIRouter(prefix="/users")
 
 
-@router.post("/", response_model=UserPublic)
+@router.post("/", response_model=UserPublic, status_code=status.HTTP_201_CREATED)
 async def register_user(
     user_create: UserCreate, service: UserService = Depends(get_user_service)
 ):
