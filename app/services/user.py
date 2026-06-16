@@ -1,8 +1,9 @@
 from uuid import UUID
 
 from app.exceptions.exceptions import ConflictException, NotFoundException
-from app.models.user import User, UserCreate
+from app.models.user import User
 from app.repositories.user import UserRepository
+from app.schemas.user import UserCreate, UserLogin
 
 
 class UserService:

@@ -3,7 +3,8 @@ from uuid import UUID
 import bcrypt
 from sqlmodel import Session, select
 
-from app.models.user import User, UserCreate
+from app.models.user import User
+from app.schemas.user import UserCreate
 
 
 class UserRepository:

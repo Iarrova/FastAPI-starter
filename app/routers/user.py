@@ -4,7 +4,7 @@ from uuid import UUID
 from fastapi import APIRouter, Depends, Path
 
 from app.dependencies import get_user_service
-from app.models.user import UserCreate, UserPublic
+from app.schemas.user import UserCreate, UserLogin, UserPublic
 from app.services.user import UserService
 
 router = APIRouter(prefix="/users")
