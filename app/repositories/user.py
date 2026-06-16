@@ -1,6 +1,5 @@
 from uuid import UUID
 
-import bcrypt
 from sqlmodel import Session, select
 
 from app.models.user import User
@@ -15,11 +14,13 @@ class UserRepository:
         user = User(
             name=create.name,
             email=create.email,
-            password=hash_password(create.password),
+            password=create.password,
         )
+
         self.session.add(user)
         self.session.commit()
         self.session.refresh(user)
+
         return user
 
     def get(self, id: UUID) -> User | None:
@@ -27,10 +28,5 @@ class UserRepository:
 
     def get_by_email(self, email: str) -> User | None:
         statement = select(User).where(User.email == email)
+
         return self.session.exec(statement).first()
-
-
-def hash_password(password: str) -> str:
-    password_bytes = password.encode("utf-8")
-    hashed_password_bytes = bcrypt.hashpw(password_bytes, bcrypt.gensalt())
-    return hashed_password_bytes.decode("utf-8")
